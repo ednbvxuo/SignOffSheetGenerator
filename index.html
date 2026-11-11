@@ -2,39 +2,246 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Sample Device Evaluation Commitment Generator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HUAWEI Sign Off Sheet Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: sans-serif; max-width: 600px; margin: 40px auto; padding: 0 20px; }
-        label { display: block; margin-top: 12px; font-weight: bold; }
-        input { width: 100%; padding: 8px; margin-top: 4px; box-sizing: border-box; }
-        button { margin-top: 24px; padding: 12px 24px; font-size: 16px; cursor: pointer; }
+        :root {
+            --huawei-red: #C8102E;
+            --huawei-red-hover: #A50D25;
+            --bg-color: #F4F5F7;
+            --card-bg: #FFFFFF;
+            --text-main: #333333;
+            --text-muted: #6B7280;
+            --border-color: #D1D5DB;
+            --focus-ring: rgba(200, 16, 46, 0.2);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            width: 100%;
+            max-width: 650px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05), 0 4px 6px rgba(0, 0, 0, 0.03);
+            overflow: hidden;
+            border-top: 6px solid var(--huawei-red);
+        }
+
+        .header {
+            padding: 30px 40px;
+            border-bottom: 1px solid var(--bg-color);
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #111;
+            letter-spacing: -0.5px;
+        }
+
+        .header p {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+
+        .form-content {
+            padding: 30px 40px 40px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 15px;
+            font-family: inherit;
+            color: var(--text-main);
+            background-color: #FAFAFA;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        input:hover {
+            border-color: #9CA3AF;
+        }
+
+        input:focus {
+            background-color: #FFFFFF;
+            border-color: var(--huawei-red);
+            box-shadow: 0 0 0 4px var(--focus-ring);
+        }
+
+        input::placeholder {
+            color: #9CA3AF;
+            font-weight: 400;
+        }
+
+        /* Fix for date input styling on some browsers */
+        input[type="date"] {
+            appearance: none;
+            -webkit-appearance: none;
+            cursor: text;
+        }
+
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            cursor: pointer;
+            opacity: 0.6;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: inherit;
+            color: #FFFFFF;
+            background-color: var(--huawei-red);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .submit-btn:hover {
+            background-color: var(--huawei-red-hover);
+        }
+
+        .submit-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Loader animation */
+        .loader {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #FFF;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 600px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+            .header, .form-content {
+                padding: 20px;
+            }
+        }
     </style>
 </head>
 <body>
-    <h2>HUAWEI Sign Off Sheet Generator</h2>
 
-    <label>Name</label>
-    <input id="name" placeholder="e.g., 3lawy Tech">
+    <div class="container">
+        <div class="header">
+            <h1>HUAWEI Sign Off Sheet</h1>
+            <p></p>
+        </div>
 
-    <label>Date</label>
-    <input id="date" type="date">
+        <div class="form-content">
+            <div class="grid-2">
+                <div class="form-group full-width">
+                    <label>Name</label>
+                    <input id="name" placeholder="e.g., 3alawy Tech">
+                </div>
 
-    <label>Product Model</label>
-    <input id="model" placeholder="e.g., T0029">
+                <div class="form-group full-width">
+                    <label>Date</label>
+                    <input id="date" type="date">
+                </div>
 
-    <label>Product Name</label>
-    <input id="config" placeholder="e.g., Standard Edition">
+                <div class="form-group">
+                    <label>Product Model</label>
+                    <input id="model" placeholder="e.g., T0029">
+                </div>
 
-    <label>Color</label>
-    <input id="color" placeholder="e.g., Ceramic White">
+                <div class="form-group">
+                    <label>Product Name</label>
+                    <input id="config" placeholder="e.g., FreeBuds Neo">
+                </div>
 
-    <label>Serial Number</label>
-    <input id="serial" placeholder="e.g., SN123456">
+                <div class="form-group">
+                    <label>Color</label>
+                    <input id="color" placeholder="e.g., Ceramic White">
+                </div>
 
-    <label>Quantity</label>
-    <input id="quantity" type="number" value="1">
+                <div class="form-group">
+                    <label>Serial Number</label>
+                    <input id="serial" placeholder="e.g., SN123456">
+                </div>
 
-    <button onclick="generate()">Generate Word Document</button>
+                <div class="form-group full-width">
+                    <label>Quantity</label>
+                    <!-- Changed from type="number" to type="text" -->
+                    <input id="quantity" type="text" value="1" placeholder="e.g., 1" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                </div>
+            </div>
+
+            <button class="submit-btn" id="generateBtn" onclick="generate()">
+                <span id="btnText">Generate Word Document</span>
+                <div class="loader" id="btnLoader"></div>
+            </button>
+        </div>
+    </div>
 
     <script src="https://unpkg.com/docxtemplater@3.71.0/build/docxtemplater.js"></script>
     <script src="https://unpkg.com/pizzip@3.2.0/dist/pizzip.js"></script>
@@ -43,15 +250,19 @@
 
     <script>
         function generate() {
-            // 1. Read the 7 user inputs
-            const dateValue = document.getElementById('date').value; // "2026-10-29"
-            const parts = dateValue.split('-'); // ["2026","10","29"]
+            const btn = document.getElementById('generateBtn');
+            const btnText = document.getElementById('btnText');
+            const loader = document.getElementById('btnLoader');
+
+            // Read values
+            const dateValue = document.getElementById('date').value; 
+            const parts = dateValue.split('-'); 
             const year  = parts[0] || '';
             const month = parts[1] || '';
             const day   = parts[2] || '';
 
             const data = {
-                name:     document.getElementById('name').value,
+                name:     document.getElementById('name').value || 'Recipient',
                 month:    month,
                 day:      day,
                 year:     year,
@@ -62,30 +273,54 @@
                 quantity: document.getElementById('quantity').value
             };
 
-            // 2. Load template.docx from the same folder
+            // UI Loading state
+            btn.style.pointerEvents = 'none';
+            btn.style.opacity = '0.8';
+            btnText.style.display = 'none';
+            loader.style.display = 'block';
+
             PizZipUtils.getBinaryContent('template.docx', function (error, content) {
+                
+                // Reset UI Loading state
+                const resetUI = () => {
+                    btn.style.pointerEvents = 'auto';
+                    btn.style.opacity = '1';
+                    btnText.style.display = 'block';
+                    loader.style.display = 'none';
+                };
+
                 if (error) {
-                    alert('Could not find template.docx in the same folder as index.html.');
+                    resetUI();
+                    alert('Could not find template.docx in the same folder as index.html. If testing locally, please use a local server.');
                     throw error;
                 }
 
-                const zip = new PizZip(content);
-                const doc = new window.docxtemplater(zip, {
-                    paragraphLoop: true,
-                    linebreaks: true
-                });
+                try {
+                    const zip = new PizZip(content);
+                    const doc = new window.docxtemplater(zip, {
+                        paragraphLoop: true,
+                        linebreaks: true
+                    });
 
-                // 3. Replace placeholders
-                doc.render(data);
+                    doc.render(data);
 
-                // 4. Download the generated file
-                const blob = doc.getZip().generate({
-                    type: 'blob',
-                    mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-                });
+                    const blob = doc.getZip().generate({
+                        type: 'blob',
+                        mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+                    });
 
-                const fileName = data.name + '_' + data.config + '.docx';
-                saveAs(blob, fileName);
+                    // Create a clean filename
+                    const safeName = data.name.replace(/[^a-z0-9]/gi, '_');
+                    const safeConfig = data.config.replace(/[^a-z0-9]/gi, '_');
+                    const fileName = `${safeName}_${safeConfig}.docx`;
+                    
+                    saveAs(blob, fileName);
+                    resetUI();
+                } catch (err) {
+                    resetUI();
+                    console.error(err);
+                    alert("An error occurred generating the document. Check the console for details.");
+                }
             });
         }
     </script>
